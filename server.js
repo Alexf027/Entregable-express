@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+require("dotenv").config();
 
-const listViewRouter = require('./list-view-router');
-const listEditRouter = require('./list-edit-router');
+const login = require("./routers/login")
+const listViewRouter = require('./routers/list-view-router');
+const listEditRouter = require('./routers/list-edit-router');
 
 function validateHTTPMethods(req, res, next) {
   const validMethods = ['GET', 'POST', 'PUT', 'DELETE'];
@@ -18,9 +19,10 @@ app.use(validateHTTPMethods);
 
 app.use(express.json());
 
+app.use("/login", login);
 app.use("/list-view", listViewRouter);
 app.use("/list-edit", listEditRouter);
 
-app.listen(port, () => {
-  console.log(`Servidor Express en funcionamiento en el puerto ${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Servidor ON ${process.env.PORT}`);
 });

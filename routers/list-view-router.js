@@ -1,20 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const tasks = require("../data/data")
 
-const tasks = [
-  {
-    id: '1',
-    name: 'Alimentos',
-    description: 'Hacer la compra',
-    isCompleted: false,
-  },
-  {
-    id: '2',
-    name: 'Massimo',
-    description: 'Pasear al perro',
-    isCompleted: true,
-  },
-];
 
 function validateParameters(req, res, next) {
   const paramId = req.params.taskId; 
@@ -24,6 +11,12 @@ function validateParameters(req, res, next) {
   }
   next();
 }
+
+router.use(express.json());
+
+router.get("/task", (_req, res) =>{
+  res.status(200).json(tasks)
+})
 
 router.get('/completed', (req, res) => {
   const completedTasks = tasks.filter(task => task.isCompleted);

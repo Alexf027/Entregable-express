@@ -1,3 +1,6 @@
+const express = require('express');
+const router = express.Router();
+
 function validateTaskData(req, res, next) {
   const { id, name, description, isCompleted } = req.body;
 
@@ -7,25 +10,9 @@ function validateTaskData(req, res, next) {
     }
   }
   next();
-}
+};
 
-const express = require('express');
-const router = express.Router();
-
-let tasks = [
-  {
-    id: '3',
-    name: 'Estudiar',
-    description: 'Leer documentacion de express',
-    isCompleted: false,
-  },
-  {
-    id: '4',
-    name: 'Ejercicio',
-    description: 'entrenar 1 hora diaria',
-    isCompleted: true,
-  },
-];
+router.use(express.json());
 
 router.post('/create', validateTaskData, (req, res) => {
   const newTask = req.body;
