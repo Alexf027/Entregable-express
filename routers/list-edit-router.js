@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const tasks = require("../data/data")
 
 function validateTaskData(req, res, next) {
   const { id, name, description, isCompleted } = req.body;
 
-  if(req.method === 'POST' || req.method === 'PUT'){
+  if(req.method === 'POST'){
     if(!id || !name || !description || typeof isCompleted !== 'boolean'){
       return res.status(400).json({error: 'Datos de tarea inválidos'});
     }
@@ -12,24 +13,25 @@ function validateTaskData(req, res, next) {
   next();
 };
 
-router.use(express.json());
-
 router.post('/create', validateTaskData, (req, res) => {
   const newTask = req.body;
   tasks.push(newTask);
-  res.json(newTask);
+  res.status(201).json(newTask);
 });
 
 router.delete('/delete/:taskId', (req, res) => {
   const taskId = req.params.taskId;
-  tasks = tasks.filter(task => task.id !== taskId);
+  const tasksIndex = tasks.findIndex(task => task.id !== taskId);
+  tasks.splice(tasksIndex, 1);
   res.json({ message: `Tarea con ID ${taskId} eliminada` });
+  
 });
 
 router.put('/update/:taskId', validateTaskData, (req, res) => {
   const taskId = req.params.taskId;
   const updatedTask = req.body;
-  tasks = tasks.map(task => (task.id === taskId ? updatedTask : task));
+  const taskIndex = tasks.findIndex(task => (task.id == taskId));
+  tasks[taskIndex] = updatedTask
   res.json(updatedTask);
 });
 
