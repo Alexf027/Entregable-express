@@ -7,15 +7,15 @@ const authJWT = require("../middleware/auth");
 require("dotenv").config();
 
 router.post("/", async function (req, res){
-   const { email, password} = req.body;
+   const { email, password } = req.body;
 
    try {
       const userFound = await User.findOne({email})
       
-      if(!userFound) return res.status(400).json({ message: "⚠️ User not found, register"})
+      if(!userFound) return res.status(400).json(["User not found, register"])
       
       const isMatch = await bcrypt.compare(password, userFound.password);
-      if(!isMatch) return res.status(400).json({ message: "📧 Email or invalid password 🚫"})
+      if(!isMatch) return res.status(400).json(["Email or invalid password"])
       
        const token = await authJWT({ id: userFound._id })
        res.cookie('token', token);
@@ -27,7 +27,7 @@ router.post("/", async function (req, res){
            updatedAt: userFound.updatedAt,
        });
    } catch (error) {
-       res.status(404).json({ error: "⛔ Invalid register"})
+       res.status(404).json(["Invalid register"])
    }
   });
 

@@ -9,22 +9,32 @@ router.get("/tasks", async(req, res) =>{
   res.status(200).json(tasks);
 })
 
-router.get('/completed', async(req, res) => {
-  const completedTasks = await Task.find(task => task.isCompleted).populate('user');
+router.get('/tasks/completed', async(req, res) => {
+  try {
+    const completedTasks = await Task.find(task => task.isCompleted).populate('user');
   res.json(completedTasks);
-});
-
-router.get('/incomplete', async(req, res) => {
-  const incompleteTasks = await Task.filter(task => !task.isCompleted).populate('user');
-  res.json(incompleteTasks);
-});
-
-router.get('/:id', async(req, res) => {
-  const task = await Task.findById(req.params.id).populate('user');
-  if (!task) {
-    return res.status(404).json({ message: "🔎 Task not found" });
+  } catch (error) {
+    return res.status(500).json({ message: "😓 Something went wrong" });
   }
-  res.json(task);
+});
+
+router.get('/tasks/incomplete', async(req, res) => {
+  try {
+    const incompleteTasks = await Task.filter(task => !task.isCompleted).populate('user');
+  res.json(incompleteTasks);
+  } catch (error) {
+    return res.status(500).json({ message: "😓 Something went wrong" });
+  }
+});
+
+router.get('tasks/:id', async(req, res) => {
+  try {
+    const task = await Task.findById(req.params.id).populate('user');
+    if (!task)
+    res.json(task);
+  } catch (error) {
+    return res.status(404).json({ message: 'Task not found'});
+  }
 });
 
 module.exports = router;

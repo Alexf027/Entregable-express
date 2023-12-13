@@ -7,10 +7,10 @@ const createTaskSchema = z.object({
     description: z.string({
         required_error: 'Description is required'
     }),
-    priority: z.number({
-        required_error: 'Priority es required'
-    }),
     date: z.string().datetime().optional(),
+    priority: z.string().refine(value => ['Low', 'Medium', 'High'].includes(value), {
+        message: 'Priority must be "Low", "Medium", or "High"',
+    }).optional(),
 });
 
 module.exports = createTaskSchema;
